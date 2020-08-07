@@ -3,6 +3,8 @@ import { hash } from 'bcryptjs';
 
 import User from '../models/User';
 
+import AppError from '../errors/Error';
+
 interface Request {
     name: string,
     email: string,
@@ -22,7 +24,7 @@ class CreateUserService{
 
         //Caso tenham usuários de mesmo e-mail
         if(checkUserExists){
-            throw new Error("Email address already used!")
+            throw new AppError("Email address already used!", 400)
         }
 
         //Criptografando a senha
@@ -34,6 +36,9 @@ class CreateUserService{
             email,
             password: hashedPassword,
         })
+
+        //Salvando no banco
+        await userRepository.save(user);
 
         //Continuará sendo salvo no banco, porém não será retornado no response
         delete user.password;

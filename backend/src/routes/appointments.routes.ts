@@ -6,10 +6,14 @@ import { getCustomRepository } from 'typeorm';
 import { parseISO } from 'date-fns';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 import CreateAppointmentService from '../services/CreateAppointmentService';
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 
 //Preocupações da rota: Receber requisições, chamar outro arquivo para tratar e devolver uma resposta
 const appointmentsRouter = Router();
+
+//Todas as rotas irão usar o nosso middleware
+appointmentsRouter.use(ensureAuthenticated);
 
 //Obter todos os appointments
 appointmentsRouter.get('/', async (req, res) =>{
@@ -25,22 +29,17 @@ appointmentsRouter.get('/', async (req, res) =>{
 //Rota Principal -> Como estamos usando um meno index.ts que indica que aqui é o lugar que deve ser salvo então não precisamos escrever as rotas por completo
 appointmentsRouter.post('/', async (req, res) => {
 
-    try{
-        const { provider_id, date } = req.body
-        //formatando a data/horario para ser o inicio da hora (13:25 => 13:00)
-        const parsedDate = parseISO(date);
+    const { provider_id, date } = req.body
+    //formatando a data/horario para ser o inicio da hora (13:25 => 13:00)
+    const parsedDate = parseISO(date);
 
-        //Obtendo a função criadora de appointments
-        const createAppointment = new CreateAppointmentService();
+    //Obtendo a função criadora de appointments
+    const createAppointment = new CreateAppointmentService();
 
-        //Executando a função que cria appointments
-        const appointment = await createAppointment.execute({date: parsedDate, provider_id})
+    //Executando a função que cria appointments
+    const appointment = await createAppointment.execute({date: parsedDate, provider_id})
 
-        return res.json(appointment);
-    }catch(err){
-        //Caso de algo errado retornaremos a mensagem do erro
-        return res.status(400).json({ error: err.message })
-    }
+    return res.json(appointment);
 
 });
 

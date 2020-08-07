@@ -6,6 +6,8 @@ import { sign } from 'jsonwebtoken';
 
 import authConfig from '../config/auth';
 
+import AppError from '../errors/Error';
+
 interface Request{
     email: string;
     password: string;
@@ -28,7 +30,7 @@ class AuthenticateUserService{
 
         //Caso tenham usuários de mesmo e-mail
         if(!user){
-            throw new Error("Incorrect Email/Password combination.")
+            throw new AppError("Incorrect Email/Password combination.", 401)
         }
 
         //user.password -> Senha criptografada
@@ -37,7 +39,7 @@ class AuthenticateUserService{
         const passwordMatched = await compare(password, user.password);
 
         if(!passwordMatched){
-            throw new Error("Incorrect Email/Password combination.")
+            throw new AppError("Incorrect Email/Password combination.", 401)
         }
 
         const { secret, expiresIn } = authConfig.jwt;

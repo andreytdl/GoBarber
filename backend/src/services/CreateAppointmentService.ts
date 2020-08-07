@@ -5,6 +5,9 @@ import { startOfHour } from 'date-fns';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 import User from '../models/User';
 
+import AppError from '../errors/Error';
+
+
 interface RequestDTO{
     provider_id: string,
     date: Date;
@@ -24,7 +27,7 @@ class CreateAppointmentService {
         //Caso retorne Null
         //O Service não tem acesso aos dados da requisição e aos dados da resposta, então enviaremos um erro pra cima
         if(findAppointmentInSameDate){
-            throw Error('this appointment is already booked');
+            throw new AppError('this appointment is already booked', 400);
         }
 
         //Criando o appointment (Não está no banco de dados ainda)
