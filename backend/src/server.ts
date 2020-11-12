@@ -10,10 +10,16 @@ import uploadConfig from './config/upload';
 //importando o Typeorm
 import './database';
 
+import cors from 'cors';
+
 const app = express();
 
 //Liberando o uso de Json
 app.use(express.json())
+
+app.use(cors({
+    // origin: 'http://localhost:3333'
+}))
 
 //Rota para acessar os nossos arquivos estáticos do frontend
 app.use('/files', express.static(uploadConfig.directory));

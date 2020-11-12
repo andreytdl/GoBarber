@@ -1,13 +1,25 @@
 import React from 'react';
 
-import SigniIn from './pages/SignIn';
-import GlobalStyle from './styles/global'
+import SignIn from './pages/SignIn';
+import GlobalStyle from './styles/global';
 
-const App: React.FC = () => (
+import { AuthProvider } from '../src/context/AuthContext';
+
+const App: React.FC = () => {
+
+  return(
+
   <>
-  <SigniIn/>
-  <GlobalStyle/>
+    <AuthProvider>
+      <SignIn/>
+    </AuthProvider>
+
+    <GlobalStyle/>
   </>
-)
+  
+  
+  );
+
+};
 
 export default App;

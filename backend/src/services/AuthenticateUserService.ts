@@ -50,9 +50,9 @@ class AuthenticateUserService{
         });
 
         return {
-                user,
-                token,
-            }
+            user,
+            token,
+        }
     }
 }
 
