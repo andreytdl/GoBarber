@@ -1,4 +1,4 @@
-import React, {createContext, useCallback, useState} from 'react'
+import React, {createContext, useCallback, useContext, useState} from 'react'
 
 import api from '../services/api';
 
@@ -10,7 +10,7 @@ interface SignInCredentials {
 interface AuthContextData {
     user: object;
     signIn(credentials: SignInCredentials): Promise<void>;
-
+    signOut(): void;
 }
 
 interface AuthState {
@@ -19,7 +19,7 @@ interface AuthState {
 }
 
 //as AuthContext forçamos o contexto a iniciar como um objeto vazio
-export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
+const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({children}) => {
 
@@ -57,14 +57,35 @@ export const AuthProvider: React.FC = ({children}) => {
         //O user é objeto e portanto precisa do JSON.stringfy
         localStorage.setItem("@GoBarber:user", JSON.stringify(user))
         
-        console.log(data);
+        console.log(response.data);
         
         setData({token, user})
     }, []);
 
+    const signOut = useCallback(() => {
+        //Removemos do local storage
+        localStorage.removeItem("@GoBarber:token");
+        localStorage.removeItem("@GoBarber:user");
+
+        //Removemos da Context Api
+        setData({} as AuthState)
+    }, [])
+
     return (
-        <AuthContext.Provider value={{user: data.user, signIn}}>
+        <AuthContext.Provider value={{user: data.user, signIn, signOut}}>
             {children}
         </AuthContext.Provider>
     );
+}
+
+
+export function useAuth(): AuthContextData {
+    const context = useContext(AuthContext);
+
+    //Caso algum dev tente usar o metodo useAuth sem existir o contexto antes (Ao redor do App.tsx como está atualmente)
+    if(!context) {
+        throw Error('UserAuth must be used within an AuthProvides')
+    }
+
+    return context
 }
