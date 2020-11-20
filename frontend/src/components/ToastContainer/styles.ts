@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 
 interface ToastProps {
     type?: 'success' | 'error' | 'info';
+    hasDescription: boolean
 }
 
 export const Container = styled.div`
@@ -38,13 +39,14 @@ export const Toast = styled.div<ToastProps>`
     // shadow, shadow, blur, shadow color and shadow opacity
     box-shadow: 20px 2px 8px rgba(0, 0, 0, 0.2);
 
+    & + div {
+        margin-top: 8px;
+    }
+
     display: flex;
 
     //Variações de tipos '::grammar-error, 'success', 'info'
     ${(props) => toastTypeVariations[props.type || 'info']}
-
-    background: #ebf8ff;
-    color: #3172b7;
 
     > svg{
         margin: 4px 12px 0 0;
@@ -70,4 +72,13 @@ export const Toast = styled.div<ToastProps>`
         background: transparent;
         color: inherit;
     }
+
+    ${props => !props.hasDescription && css `
+        align-items: center;
+
+        svg {
+            margin-top: 0;
+        }
+
+    `}
 `;

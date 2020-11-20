@@ -6,7 +6,20 @@ import { FiAlertCircle, FiXCircle } from 'react-icons/fi'
 const ToastContainer: React.FC = () => {
     return (
         <Container>
-            <Toast type="info">
+            <Toast type="info" hasDescription>
+                <FiAlertCircle />
+                <div>
+                    <strong>Aconteceu um erro</strong>
+                    <p>Não foi possível fazer login na aplicação</p>
+                </div>
+
+                <button type="button">
+                    <FiXCircle size={18} />
+                </button>
+
+            </Toast>
+
+            <Toast type="error" hasDescription>
                 <FiAlertCircle />
 
 
@@ -21,28 +34,10 @@ const ToastContainer: React.FC = () => {
 
             </Toast>
 
-            <Toast type="error">
+            <Toast type="success" hasDescription={false}>
                 <FiAlertCircle />
-
-
-                <div>
+                 <div>
                     <strong>Aconteceu um erro</strong>
-                    <p>Não foi possível fazer login na aplicação</p>
-                </div>
-
-                <button type="button">
-                    <FiXCircle size={18} />
-                </button>
-
-            </Toast>
-
-            <Toast type="success">
-                <FiAlertCircle />
-
-
-                <div>
-                    <strong>Aconteceu um erro</strong>
-                    <p>Não foi possível fazer login na aplicação</p>
                 </div>
 
                 <button type="button">
