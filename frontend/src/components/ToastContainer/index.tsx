@@ -1,50 +1,40 @@
 import React from 'react';
 
-import { Container, Toast } from './styles';
-import { FiAlertCircle, FiXCircle } from 'react-icons/fi'
+import Toast from './Toast'
 
-const ToastContainer: React.FC = () => {
+import { ToastMessage } from '../../hooks/Toast'
+import { Container } from './styles';
+import { useTransition } from 'react-spring';
+
+interface ToastContainerProps {
+    messages: ToastMessage[]
+}
+
+const ToastContainer: React.FC<ToastContainerProps> = ({messages}) => {    
+    //Animation
+    const messageWithTransitions = useTransition(
+        messages,
+        message => message.id,
+        {
+            //100% é o tamanho dele
+            from: {right: '-120%'},
+            enter: {right: '0%'},
+            leave: {right: '-120%'}
+        }
+        )
+
     return (
         <Container>
-            <Toast type="info" hasDescription>
-                <FiAlertCircle />
-                <div>
-                    <strong>Aconteceu um erro</strong>
-                    <p>Não foi possível fazer login na aplicação</p>
-                </div>
-
-                <button type="button">
-                    <FiXCircle size={18} />
-                </button>
-
+            {messageWithTransitions.map(({item, key, props}) => (
+                <Toast 
+                key={key}
+                message={item}
+                style={props}
+                >
             </Toast>
-
-            <Toast type="error" hasDescription>
-                <FiAlertCircle />
+            ))}
 
 
-                <div>
-                    <strong>Aconteceu um erro</strong>
-                    <p>Não foi possível fazer login na aplicação</p>
-                </div>
-
-                <button type="button">
-                    <FiXCircle size={18} />
-                </button>
-
-            </Toast>
-
-            <Toast type="success" hasDescription={false}>
-                <FiAlertCircle />
-                 <div>
-                    <strong>Aconteceu um erro</strong>
-                </div>
-
-                <button type="button">
-                    <FiXCircle size={18} />
-                </button>
-
-            </Toast>
         </Container>
 
 

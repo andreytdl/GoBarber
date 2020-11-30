@@ -3,11 +3,11 @@ import ToastContainer from '../components/ToastContainer';
 import { v4 as uuid } from 'uuid';
 
 interface ToastContextData {
-    addToast(): void
-    removeToast(): void
+    addToast(message: Omit<ToastMessage, 'id'>): void
+    removeToast(id: string): void
 }
 
-interface ToastMessage{
+export interface ToastMessage{
     id: string;
     type?: 'success' | 'error' | 'info';
     title: string;
@@ -29,17 +29,22 @@ const ToastProvider: React.FC =({children}) => {
             description
         };
 
-        setMessages([...messages, toast])
+        //Caso estejamos passando por função receberemos o valor antigo (oldMessages)
+        setMessages((oldMessages) => [...oldMessages, toast])
     }, [])
 
-    const removeToast = useCallback(() => {
-        console.log("add Toast")
+    const removeToast = useCallback((id: string) => {
+        
+        //Recebendo as mensagens antigas do estado como uma function (state)
+        setMessages(state => state.filter(message => message.id != id))
+
+
     }, [])
 
     return(
         <toastContext.Provider value={{ addToast, removeToast}}>
             {children}
-            <ToastContainer/>
+            <ToastContainer messages={messages}/>
         </toastContext.Provider>
     );
 }

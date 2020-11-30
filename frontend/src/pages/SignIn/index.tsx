@@ -10,8 +10,10 @@ import { Form } from '@unform/web';
 
 import { useAuth } from '../../hooks/Auth';
 
-import { Container, Content, Background } from './styles';
+import { Container, Content, AnimationContainer, Background } from './styles';
 import { useToast } from '../../hooks/Toast';
+
+import { Link } from 'react-router-dom';
 
 interface SignInFormData {
     email: string;
@@ -51,10 +53,15 @@ const SignIn: React.FC = () => {
                 //Guardando os erros para serem mostrados no input
                 const errors = getValidationErrors(err);
                 formRef.current?.setErrors(errors);
+                return;
             }
 
             //Caso não for erro do Yup
-            addToast();
+            addToast({
+                type: 'error',
+                title: 'Erro na autenticação',
+                description: 'Ocorreu um erro ao fazer login, cheque as credenciais',
+            });
         }
 
     }, [signIn, addToast])
@@ -64,27 +71,31 @@ const SignIn: React.FC = () => {
         
         <Container>
         <Content>
-            {/* Imagem do barbeiro */}
-            <img src = {logoImg} alt="GoBarber"/>
+            <AnimationContainer>
 
-            <Form ref={formRef} onSubmit={handleSubmit}>
-                <h1>Faça seu logon</h1>
-                
-                {/* Podemos criar a propriedade que quiser-mos e a passarmos por parâmetro - Por exemplo a "icon" */}
-                <Input icon={FiMail} name="email" placeholder="E-mail"/>
-                
-                <Input icon ={FiLock} name = "password" type="password" placeholder="Senha"/>
-                
-                <Button type="submit">Entrar</Button>
+                {/* Imagem do barbeiro */}
+                <img src = {logoImg} alt="GoBarber"/>
 
-                <a href="forgot">Esqueci minha senha</a>
+                <Form ref={formRef} onSubmit={handleSubmit}>
+                    <h1>Faça seu logon</h1>
+                    
+                    {/* Podemos criar a propriedade que quiser-mos e a passarmos por parâmetro - Por exemplo a "icon" */}
+                    <Input icon={FiMail} name="email" placeholder="E-mail"/>
+                    
+                    <Input icon ={FiLock} name = "password" type="password" placeholder="Senha"/>
+                    
+                    <Button type="submit">Entrar</Button>
 
-            </Form>
+                    <a href="forgot">Esqueci minha senha</a>
 
-            <a href="">
-                <FiLogIn/>
-                Criar conta
-            </a>
+                </Form>
+
+                <Link to="/signup">
+                    <FiLogIn/>
+                    Criar conta
+                </Link>
+
+            </AnimationContainer>
 
         </Content>
         

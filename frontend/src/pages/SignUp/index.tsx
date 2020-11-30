@@ -5,12 +5,15 @@ import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
 
+import { Link } from 'react-router-dom'
+
 import logoImg from '../../assets/logo.svg'
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
 import { Container, Content, Background } from './styles';
+import { AnimationContainer } from './styles';
 
 const SignUp: React.FC = () => {
     
@@ -56,32 +59,34 @@ const SignUp: React.FC = () => {
         {/* Deixamos separado aqui em div pois assim poderemos mais tarde deixar responsivo */}
         <Background/>
 
-        <Content>
-            {/* Imagem do barbeiro */}
-            <img src = {logoImg} alt="GoBarber"/>
+        <AnimationContainer>
+            <Content>
+                {/* Imagem do barbeiro */}
+                <img src = {logoImg} alt="GoBarber"/>
 
-            <Form ref={formRef} onSubmit={handleSubmit}>
-                <h1>Faça seu Cadastro</h1>
-                
-                {/* Podemos criar a propriedade que quiser-mos e a passarmos por parâmetro - Por exemplo a "icon" */}
-                <Input icon={FiUser} name="name" placeholder="Nome"/>
-                <Input icon={FiMail} name="email" placeholder="E-mail"/>
-                <Input icon ={FiLock}
-                    name = "password"
-                    type="password"
-                    placeholder="Senha"
-                />
-                
-                <Button type="submit">Cadastrar</Button>
+                <Form ref={formRef} onSubmit={handleSubmit}>
+                    <h1>Faça seu Cadastro</h1>
+                    
+                    {/* Podemos criar a propriedade que quiser-mos e a passarmos por parâmetro - Por exemplo a "icon" */}
+                    <Input icon={FiUser} name="name" placeholder="Nome"/>
+                    <Input icon={FiMail} name="email" placeholder="E-mail"/>
+                    <Input icon ={FiLock}
+                        name = "password"
+                        type="password"
+                        placeholder="Senha"
+                        />
+                    
+                    <Button type="submit">Cadastrar</Button>
 
-            </Form>
+                </Form>
 
-            <a href="login">
-                <FiArrowLeft/>
-                Voltar para logon
-            </a>
+                <Link to="/">
+                    <FiArrowLeft/>
+                    Voltar para logon
+                </Link>
 
-        </Content>
+            </Content>
+        </AnimationContainer>
         
 
     </Container>
