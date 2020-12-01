@@ -13,7 +13,7 @@ import { useAuth } from '../../hooks/Auth';
 import { Container, Content, AnimationContainer, Background } from './styles';
 import { useToast } from '../../hooks/Toast';
 
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 interface SignInFormData {
     email: string;
@@ -26,6 +26,8 @@ const SignIn: React.FC = () => {
     const { signIn } = useAuth();
 
     const { addToast } = useToast();
+
+    const history = useHistory();
 
     const handleSubmit = useCallback(async (data: SignInFormData) => {
         //Fazendo a validação com o yup
@@ -46,6 +48,8 @@ const SignIn: React.FC = () => {
                 password: data.password,
             });
 
+            history.push('/dashboard');
+            
         }catch(err){
 
             //Caso seja erro do Yup
@@ -64,7 +68,9 @@ const SignIn: React.FC = () => {
             });
         }
 
-    }, [signIn, addToast])
+        console.log("No toast")
+
+    }, [signIn, addToast, history])
 
     return (
 

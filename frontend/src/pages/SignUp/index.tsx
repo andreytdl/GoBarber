@@ -1,11 +1,11 @@
-import React, { useEffect, useCallback,useRef } from 'react';
+import React, { useCallback,useRef } from 'react';
 import { FiMail, FiLock, FiUser, FiArrowLeft } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
 
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import logoImg from '../../assets/logo.svg'
 
@@ -15,11 +15,23 @@ import Button from '../../components/Button';
 import { Container, Content, Background } from './styles';
 import { AnimationContainer } from './styles';
 
+import api from '../../services/api'
+
+import { useToast } from './../../hooks/Toast';
+
+interface SignUpFormData {
+    name: string;
+    email: string;
+    password: string;
+}
+
 const SignUp: React.FC = () => {
     
     const formRef = useRef<FormHandles>(null);
+    const { addToast } = useToast();
+    const history = useHistory();
 
-    const handleSubmit = useCallback(async (data: object) => {
+    const handleSubmit = useCallback(async (data: SignUpFormData) => {
         //Fazendo a validação com o yup
         try {
             formRef.current?.setErrors({});
@@ -34,20 +46,36 @@ const SignUp: React.FC = () => {
                 abortEarly: false,
             });
 
-        }catch(err){
-            
-            //Guardando os erros para serem mostrados no input
-            // formRef.current?.setErrors({
-            //     name: 'Nome obrigatório',
-            //     email: 'Email Obrigatório'
-            // })
+            await api.post('/users', data);
 
-            //Guardando os erros para serem mostrados no input
-            const errors = getValidationErrors(err);
-            formRef.current?.setErrors(errors);
+            history.push('/');
+
+            addToast({
+                type: 'success',
+                title: 'Cadastro realizado!',
+                description: 'Você já pode fazer seu logon',
+            })
+
+        }catch(err){
+            //Caso seja erro do Yup
+            if(err instanceof Yup.ValidationError){
+                //Guardando os erros para serem mostrados no input
+                const errors = getValidationErrors(err);
+                formRef.current?.setErrors(errors);
+                return;
+            }
+
+            console.log("Toast")
+
+            //Caso não for erro do Yup
+            addToast({
+                type: 'error',
+                title: 'Erro no cadastro',
+                description: 'Ocorreu um erro ao fazer cadastro, tente novamente',
+            });
         }
         console.log(data);
-    }, [])
+    }, [addToast, history])
 
     // useEffect(
 

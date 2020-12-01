@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "dev:server": "ts-node-dev --transpileOnly --inspect --ignore-watch node_modules src/server.ts",
+    "dev:server": "ts-node-dev --transpile-only --inspect --ignore-watch node_modules src/server.ts",
     "start": "ts-node src/index.ts",
     "orm": "ts-node-dev ./node_modules/typeorm/cli.js"
   },
@@ -23,7 +23,6 @@
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
     "pg": "^8.3.0",
-    "react-spring": "^8.0.27",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.25",
     "uuidv4": "^6.1.1"
