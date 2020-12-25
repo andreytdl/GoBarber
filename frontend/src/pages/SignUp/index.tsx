@@ -77,10 +77,6 @@ const SignUp: React.FC = () => {
         console.log(data);
     }, [addToast, history])
 
-    // useEffect(
-
-    // , [])
-
     return (
 
     <Container>

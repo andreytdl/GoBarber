@@ -1,0 +1,86 @@
+[
+    {
+        "label": "contextlib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "contextlib",
+        "description": "contextlib",
+        "detail": "contextlib",
+        "documentation": {
+            "value": "\n```python\nimport contextlib\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {
+            "value": "\n```python\nimport os\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "shutil",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "shutil",
+        "description": "shutil",
+        "detail": "shutil",
+        "documentation": {
+            "value": "\n```python\nimport shutil\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {
+            "value": "\n```python\nimport sys\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "tempfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tempfile",
+        "description": "tempfile",
+        "detail": "tempfile",
+        "documentation": {
+            "value": "\n```python\nimport tempfile\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "zipfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "zipfile",
+        "description": "zipfile",
+        "detail": "zipfile",
+        "documentation": {
+            "value": "\n```python\nimport zipfile\n```\n",
+            "supportThemeIcons": false
+        }
+    },
+    {
+        "label": "cleanup",
+        "kind": 2,
+        "importPath": "mobile.node_modules.react-native.ReactAndroid.src.main.third-party.android.support.v7.appcompat.aar-unpacker",
+        "description": "mobile.node_modules.react-native.ReactAndroid.src.main.third-party.android.support.v7.appcompat.aar-unpacker",
+        "peekOfCode": "def cleanup(path):\n    yield path\n    shutil.rmtree(path)\nif __name__ == '__main__':\n    with zipfile.ZipFile(sys.argv[1], 'r') as z:\n        with cleanup(tempfile.mkdtemp()) as temp_path:\n            z.extractall(temp_path, filter(lambda n: n.startswith(sys.argv[2]), z.namelist()))\n            shutil.move(os.path.join(temp_path, sys.argv[2]), sys.argv[3])",
+        "detail": "mobile.node_modules.react-native.ReactAndroid.src.main.third-party.android.support.v7.appcompat.aar-unpacker",
+        "documentation": {
+            "value": "\n```python\nfrom mobile.node_modules.react-native.ReactAndroid.src.main.third-party.android.support.v7.appcompat.aar-unpacker import cleanup\n```\n\n```python\n\n\n```\n\n```python\ndef cleanup(path):\n    yield path\n    shutil.rmtree(path)\nif __name__ == '__main__':\n    with zipfile.ZipFile(sys.argv[1], 'r') as z:\n        with cleanup(tempfile.mkdtemp()) as temp_path:\n            z.extractall(temp_path, filter(lambda n: n.startswith(sys.argv[2]), z.namelist()))\n            shutil.move(os.path.join(temp_path, sys.argv[2]), sys.argv[3])\n```\n",
+            "supportThemeIcons": false
+        }
+    }
+]
