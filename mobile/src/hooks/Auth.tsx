@@ -11,6 +11,7 @@ interface AuthContextData {
     user: object;
     signIn(credentials: SignInCredentials): Promise<void>;
     signOut(): void;
+    loading: boolean;
 }
 
 interface AuthState {
@@ -26,6 +27,11 @@ export const AuthProvider: React.FC = ({children}) => {
     //Não será inicializado com um valor padrão, mas com uma função
     const [data, setData] = useState<AuthState>({} as AuthState);
 
+    //Verifica se já carregou as informações de auth para que possamos disponibilizar a tela só depois de pronto
+    //Caso contrário o usuário irá ser direcionado para o SignIn e só dps da verificação (Assincrona devido ao async storage)
+    //é que ele irá para o dashboard ou vice versa
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         async function loadStorageData(): Promise<void>{
 
@@ -37,6 +43,8 @@ export const AuthProvider: React.FC = ({children}) => {
             if(token && user){
                 setData({token, user: JSON.parse(user)})
             }
+
+            setLoading(false)
         }
 
         loadStorageData()
@@ -74,7 +82,7 @@ export const AuthProvider: React.FC = ({children}) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{user: data.user, signIn, signOut}}>
+        <AuthContext.Provider value={{user: data.user, signIn, signOut, loading}}>
             {children}
         </AuthContext.Provider>
     );

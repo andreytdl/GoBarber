@@ -21,7 +21,7 @@ export const Title = styled.Text`
 
 //Não será rect button pois é só um texto
 export const ForgotPassword = styled.TouchableOpacity`
-    margin-top: 24;
+    margin-top: 24px;
 `
 export const ForgotPasswordText = styled.Text`
     color: #F4EDE8;
