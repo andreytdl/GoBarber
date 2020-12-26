@@ -11,6 +11,8 @@ import Button from '../../components/Button'
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 
+import api from '../../services/api';
+
 //Para retirar o erro foi necessário criar a pasta @types e declarar as imagens como exportaveis
 import logoImg from '../../assets/logo.png';
 
@@ -51,9 +53,15 @@ const SignUp: React.FC = () => {
                 abortEarly: false,
             });
 
-            // await api.post('/users', data);
+            await api.post('/users', data);
 
-            // history.push('/');
+            //Caso não for erro do Yup
+            Alert.alert(
+                'Cadastro realizado com sucesso',
+                'Você já pode fazer login na aplicação.',
+            )
+
+            navigation.navigate('SignIn')
 
         }catch(err){
             //Caso seja erro do Yup
@@ -71,7 +79,7 @@ const SignUp: React.FC = () => {
             )
         }
         console.log(data);
-    }, [])
+    }, [navigation])
 
     return (
         <>
