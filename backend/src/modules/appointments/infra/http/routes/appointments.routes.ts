@@ -4,9 +4,9 @@ import { getCustomRepository } from 'typeorm';
 //ParseIso: irá converter a timestamp enviada pelo insominia em Date() que é o nativo do JavaScript
 //StartOfHour: irá obter essa mesma hora e setar os minutos, milissegundos etc em 0 deixando só o inicio da hora
 import { parseISO } from 'date-fns';
-import AppointmentsRepository from '../repositories/AppointmentsRepository';
-import CreateAppointmentService from '../services/CreateAppointmentService';
-import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+import AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
+import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentService';
+import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 
 
 //Preocupações da rota: Receber requisições, chamar outro arquivo para tratar e devolver uma resposta

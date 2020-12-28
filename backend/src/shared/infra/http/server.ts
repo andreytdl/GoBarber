@@ -2,13 +2,13 @@ import express, { Request, Response, NextFunction } from 'express';
 import routes from './routes';
 import 'reflect-metadata';
 
-import AppError from './errors/Error';
+import AppError from '@shared/errors/Error';
 import 'express-async-errors';
 
-import uploadConfig from './config/upload';
+import uploadConfig from '@config/upload';
 
 //importando o Typeorm
-import './database';
+import '@shared/infra/typeorm';
 
 import cors from 'cors';
 

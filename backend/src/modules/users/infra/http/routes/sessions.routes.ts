@@ -2,9 +2,7 @@ import { Router, response } from 'express';
 
 const sessionsRouter = Router();
 
-import AuthenticateUserService from '../services/AuthenticateUserService';
-
-import {  } from 'jsonwebtoken';
+import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
 
 //Rota Principal -> Como estamos usando um meno index.ts que indica que aqui é o lugar que deve ser salvo então não precisamos escrever as rotas por completo
 sessionsRouter.post('/', async (req, res) => {

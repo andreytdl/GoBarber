@@ -1,11 +1,11 @@
 import { Router, request } from 'express';
+import multer from 'multer';
 
-import CreateUserService from '../services/CreateUserService';
+import CreateUserService from '@modules/users/services/CreateUserService';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
-import multer from 'multer';
-import uploadConfig from '../config/upload';
-import UpdateUserAvatarService from '../services/UpdateUserAvatarService';
+import uploadConfig from '@config/upload';
+import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
 
 //Preocupações da rota: Receber requisições, chamar outro arquivo para tratar e devolver uma resposta
 const usersRouter = Router();

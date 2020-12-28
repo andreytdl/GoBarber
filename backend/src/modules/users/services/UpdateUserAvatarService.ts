@@ -1,10 +1,10 @@
 import { getRepository } from "typeorm";
-import User from '../models/User';
+import User from '@modules/users/infra/typeorm/entities/User';
 
 import path from 'path';
-import uploadConfig from '../config/upload';
+import uploadConfig from '@config/upload';
 
-import AppError from '../errors/Error';
+import AppError from '@shared/errors/Error';
 
 import fs from 'fs';
 
