@@ -2,15 +2,18 @@ import Appointment from '@modules/appointments/infra/typeorm/entities/Appointmen
 
 import { startOfHour } from 'date-fns';
 
+import { injectable, inject } from 'tsyringe';
+
 import AppError from '@shared/errors/Error';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
-
 
 interface IRequestDTO{
     provider_id: string,
     date: Date;
 }
 
+//Isso permite a classe receber injeção de dependencia
+@injectable()
 class CreateAppointmentService {
     
     //SOLID
@@ -20,6 +23,8 @@ class CreateAppointmentService {
     private appointmentsRepository: IAppointmentsRepository;
     
     constructor(
+        //Aqui fazemos a injeção de dependencia
+        @inject('AppointmentsRepository')
         appointmentsRepository: IAppointmentsRepository,
     ) {
         this.appointmentsRepository = appointmentsRepository;

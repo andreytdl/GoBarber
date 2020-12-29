@@ -7,6 +7,9 @@ import 'express-async-errors';
 
 import uploadConfig from '@config/upload';
 
+//Importando o arquivo de injeção de dependencias
+import '@shared/container';
+
 //importando o Typeorm
 import '@shared/infra/typeorm';
 

@@ -4,6 +4,7 @@ import path from 'path';
 import uploadConfig from '@config/upload';
 
 import AppError from '@shared/errors/Error';
+import { inject, injectable } from 'tsyringe';
 
 import fs from 'fs';
 import IUserRepository from "../repositories/IUserRepository";
@@ -13,19 +14,17 @@ interface IRequest{
     avatarFilename: string;
 }
 
+injectable()
 class UpdateUserAvatarService{
 
     //SOLID
     /*D - DEPENDENCY INVERSION -> Ao invés de instanciar o repositório aqui dentro
     iremos recebe-lo por parâmetro */
     
-    private userRepository: IUserRepository;
-    
     constructor(
-        userRepository: IUserRepository,
-    ) {
-        this.userRepository = userRepository;
-    }
+        @inject('UsersRepository')
+        private userRepository: IUserRepository,
+    ) { }
 
     public async execute({ user_id, avatarFilename }:IRequest): Promise<User>{
         const user = await this.userRepository.findById(user_id)

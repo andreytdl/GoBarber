@@ -1,19 +1,19 @@
 import { Router } from 'express';
 
-//ParseIso: irá converter a timestamp enviada pelo insominia em Date() que é o nativo do JavaScript
-//StartOfHour: irá obter essa mesma hora e setar os minutos, milissegundos etc em 0 deixando só o inicio da hora
-import { parseISO } from 'date-fns';
-import AppointmentsRepository from '@modules/appointments/infra/typeorm/repositories/AppointmentsRepository';
-import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentService';
+import 'reflect-metadata';
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
+import AppointmentsController from '../controllers/AppointmentsController';
 
 
 //Preocupações da rota: Receber requisições, chamar outro arquivo para tratar e devolver uma resposta
 const appointmentsRouter = Router();
 
-
 //Todas as rotas irão usar o nosso middleware
 appointmentsRouter.use(ensureAuthenticated);
+
+//Controller
+const appointmentsController = new AppointmentsController();
+
 
 //Obter todos os appointments
 // appointmentsRouter.get('/', async (req, res) =>{
@@ -25,22 +25,7 @@ appointmentsRouter.use(ensureAuthenticated);
 // })
     
 //Rota Principal -> Como estamos usando um meno index.ts que indica que aqui é o lugar que deve ser salvo então não precisamos escrever as rotas por completo
-appointmentsRouter.post('/', async (req, res) => {
-    const appointmentsRepository = new AppointmentsRepository();
-        
-    const { provider_id, date } = req.body
-    //formatando a data/horario para ser o inicio da hora (13:25 => 13:00)
-    const parsedDate = parseISO(date);
-
-    //Obtendo a função criadora de appointments
-    const createAppointment = new CreateAppointmentService(appointmentsRepository);
-
-    //Executando a função que cria appointments
-    const appointment = await createAppointment.execute({date: parsedDate, provider_id})
-
-    return res.json(appointment);
-
-});
+appointmentsRouter.post('/', appointmentsController.create);
 
 
 export default appointmentsRouter;

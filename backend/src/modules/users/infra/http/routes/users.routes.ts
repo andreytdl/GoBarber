@@ -1,12 +1,16 @@
-import { Router, request } from 'express';
+import { Router } from 'express';
 import multer from 'multer';
+import 'reflect-metadata';
 
 import CreateUserService from '@modules/users/services/CreateUserService';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 import uploadConfig from '@config/upload';
 import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService';
-import UsersRepository from '../../typeorm/repositories/UserRepository';
+
+import { container } from 'tsyringe';
+import UsersController from '../controllers/UsersController';
+import UserAvatarController from '../controllers/UserAvatarController';
 
 //Preocupações da rota: Receber requisições, chamar outro arquivo para tratar e devolver uma resposta
 const usersRouter = Router();
@@ -14,51 +18,14 @@ const usersRouter = Router();
 //Carregando o uploader do multer
 const upload = multer(uploadConfig);
 
+const usersController = new UsersController();
+const userAvatarController = new UserAvatarController();
+
 
 //Rota Principal - Criando usuário
-usersRouter.post('/', async (req, res) => {
-    
-    try{
-        const usersRepository = new UsersRepository();
-        const { name, email, password } = req.body;
-
-        const createUser = new CreateUserService(usersRepository);
-
-        const user = await createUser.execute({
-            name,
-            email,
-            password,
-        });
-
-        //Removendo a senha da resposta
-        delete user.password;
-
-        return res.status(200).json(user);
-    }catch(err){
-        return res.status(400).json({ error : err.message} )
-    }
-
-});
+usersRouter.post('/', usersController.create);
 
 //Realizando o upload de uma unica imagem
-usersRouter.patch('/avatar', ensureAuthenticated, upload.single('avatar'), async (request, response) => {
-    // Mostrando todas as informações da imagem enviada
-    // console.log(req.file)
-
-    const usersRepository = new UsersRepository();
-
-    const UpdateUserAvatar = new UpdateUserAvatarService(usersRepository);
-
-    const user = await UpdateUserAvatar.execute({
-        user_id : request.user.id,
-        avatarFilename: request.file.filename,
-    });
-
-    //Removendo a senha da resposta
-    delete user.password;
-
-    return response.json(user);
-
-})
+usersRouter.patch('/avatar', ensureAuthenticated, upload.single('avatar'), userAvatarController.update)
 
 export default usersRouter;

@@ -1,5 +1,7 @@
 import { hash } from 'bcryptjs';
 
+import { inject, injectable } from 'tsyringe';
+
 import User from '../infra/typeorm/entities/User';
 
 import AppError from '@shared/errors/Error';
@@ -11,28 +13,26 @@ interface IRequest {
     password: string;
 }
 
-class CreateUserService{
+@injectable()
+class CreateUserService {
 
     //SOLID
     /*D - DEPENDENCY INVERSION -> Ao invés de instanciar o repositório aqui dentro
     iremos recebe-lo por parâmetro */
-    
-    private userRepository: IUserRepository;
-    
+
     constructor(
-        userRepository: IUserRepository,
-    ) {
-        this.userRepository = userRepository;
-    }
+        @inject('UsersRepository')
+        private userRepository: IUserRepository,
+    ) { }
 
 
-    public async execute({name, email, password}: IRequest): Promise<User> {
+    public async execute({ name, email, password }: IRequest): Promise<User> {
 
         //Procurando usuários com o mesmo email
         const checkUserExists = await this.userRepository.findByEmail(email)
 
         //Caso tenham usuários de mesmo e-mail
-        if(checkUserExists){
+        if (checkUserExists) {
             throw new AppError("Email address already used!", 400)
         }
 
