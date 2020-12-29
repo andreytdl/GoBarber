@@ -1,4 +1,3 @@
-import { getRepository } from 'typeorm';
 import User from '@modules/users/infra/typeorm/entities/User';
 
 import { compare } from 'bcryptjs';
@@ -7,26 +6,36 @@ import { sign } from 'jsonwebtoken';
 import authConfig from '@config/auth';
 
 import AppError from '@shared/errors/Error';
+import IUserRepository from '../repositories/IUserRepository';
 
-interface Request{
+interface IRequest{
     email: string;
     password: string;
 }
 
-interface Response{
+interface IResponse{
     user: User;
     token: string;
 }
 
 class AuthenticateUserService{
-    public async execute({email, password}: Request): Promise<Response>{
-        //Através do Typeorm estou obtendo o repositório padrão de usuarios
-        const userRepository = getRepository(User);
+    
+    //SOLID
+    /*D - DEPENDENCY INVERSION -> Ao invés de instanciar o repositório aqui dentro
+    iremos recebe-lo por parâmetro */
+    
+    private userRepository: IUserRepository;
+    
+    constructor(
+        userRepository: IUserRepository,
+    ) {
+        this.userRepository = userRepository;
+    }
+
+    public async execute({email, password}: IRequest): Promise<IResponse>{
 
         //Procurando usuários com o mesmo email
-        const user = await userRepository.findOne({
-            where: {email}
-        })
+        const user = await this.userRepository.findByEmail(email)
 
         //Caso tenham usuários de mesmo e-mail
         if(!user){

@@ -1,20 +1,35 @@
-import Appointment from '../entities/Appointments';
-import { EntityRepository, Repository } from 'typeorm';
+import Appointment from '../entities/Appointment';
+import { getRepository, Repository } from 'typeorm';
 
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository'
+import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentDTO';
 
-//Responsável por operações em cima dos dados "(CRUD)"
+class AppointmentsRepository implements IAppointmentsRepository {
 
-//Avisando que estamos falando do repositório de Appointments - Colocamos a anotação somente pois queremos acrescentar metodos (listados abaixo) no nosso AppointmentsRepository
-@EntityRepository(Appointment)
-class AppointmentsRepository extends Repository<Appointment> implements IAppointmentsRepository{
+    private ormRepository: Repository<Appointment>
+
+    constructor() {
+        this.ormRepository = getRepository(Appointment);
+    }
 
     //Verificando se existe algum appointment que já foi cadastrado nesse mesmo horário
-    public async findByDate(date: Date): Promise<Appointment | undefined>{
-        const findAppointment = await this.findOne({
+    public async findByDate(date: Date): Promise<Appointment | undefined> {
+        const findAppointment = await this.ormRepository.findOne({
             where: { date },
         })
         return findAppointment;
+    }
+
+    public async create({ provider_id, date }: ICreateAppointmentDTO): Promise<Appointment> {
+        //Criando o appointment (Não está no banco de dados ainda)
+        const appointment = this.ormRepository.create({
+            provider_id,
+            date,
+        });
+
+        await this.ormRepository.save(appointment);7
+
+        return appointment;
     }
 
 }

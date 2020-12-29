@@ -1,4 +1,3 @@
-import { getRepository } from "typeorm";
 import User from '@modules/users/infra/typeorm/entities/User';
 
 import path from 'path';
@@ -7,17 +6,29 @@ import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/Error';
 
 import fs from 'fs';
+import IUserRepository from "../repositories/IUserRepository";
 
-interface Request{
+interface IRequest{
     user_id: string;
     avatarFilename: string;
 }
 
 class UpdateUserAvatarService{
 
-    public async execute({ user_id, avatarFilename }:Request): Promise<User>{
-        const userRepository = getRepository(User);
-        const user = await userRepository.findOne(user_id);
+    //SOLID
+    /*D - DEPENDENCY INVERSION -> Ao invés de instanciar o repositório aqui dentro
+    iremos recebe-lo por parâmetro */
+    
+    private userRepository: IUserRepository;
+    
+    constructor(
+        userRepository: IUserRepository,
+    ) {
+        this.userRepository = userRepository;
+    }
+
+    public async execute({ user_id, avatarFilename }:IRequest): Promise<User>{
+        const user = await this.userRepository.findById(user_id)
 
         if(!user){
             throw new AppError('Only authenticated users can change avatar!', 401)
@@ -41,7 +52,7 @@ class UpdateUserAvatarService{
         //Linkando a nova imagem ao nosso avatar
         user.avatar = avatarFilename;
 
-        await userRepository.save(user);
+        await this.userRepository.save(user);
 
         return user;
 

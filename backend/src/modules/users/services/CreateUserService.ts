@@ -1,26 +1,35 @@
-import { getRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 
-import User from '@modules/users/infra/typeorm/entities/User';
+import User from '../infra/typeorm/entities/User';
 
 import AppError from '@shared/errors/Error';
+import IUserRepository from '../repositories/IUserRepository';
 
-interface Request {
+interface IRequest {
     name: string,
     email: string,
     password: string;
 }
 
 class CreateUserService{
-    public async execute({name, email, password}: Request): Promise<User> {
 
-        //Através do Typeorm estou obtendo o repositório padrão de usuarios
-        const userRepository = getRepository(User);
+    //SOLID
+    /*D - DEPENDENCY INVERSION -> Ao invés de instanciar o repositório aqui dentro
+    iremos recebe-lo por parâmetro */
+    
+    private userRepository: IUserRepository;
+    
+    constructor(
+        userRepository: IUserRepository,
+    ) {
+        this.userRepository = userRepository;
+    }
+
+
+    public async execute({name, email, password}: IRequest): Promise<User> {
 
         //Procurando usuários com o mesmo email
-        const checkUserExists = await userRepository.findOne({
-            where: {email}
-        })
+        const checkUserExists = await this.userRepository.findByEmail(email)
 
         //Caso tenham usuários de mesmo e-mail
         if(checkUserExists){
@@ -31,17 +40,11 @@ class CreateUserService{
         const hashedPassword = await hash(password, 8);
 
         //Criando o usuário
-        const user = await userRepository.create({
+        const user = await this.userRepository.create({
             name,
             email,
             password: hashedPassword,
         })
-
-        //Salvando no banco
-        await userRepository.save(user);
-
-        //Continuará sendo salvo no banco, porém não será retornado no response
-        delete user.password;
 
         return user;
     }

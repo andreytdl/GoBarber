@@ -1,25 +1,35 @@
-import Appointment from '@modules/appointments/infra/typeorm/entities/Appointments';
-import { getCustomRepository } from 'typeorm';
+import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 
 import { startOfHour } from 'date-fns';
-import AppointmentsRepository from '@modules/appointments/repositories/AppointmentsRepository';
 
 import AppError from '@shared/errors/Error';
+import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
 
-interface RequestDTO{
+interface IRequestDTO{
     provider_id: string,
     date: Date;
 }
 
 class CreateAppointmentService {
-    public async execute({ date, provider_id }: RequestDTO): Promise<Appointment>{
-        const appointmentsRepository = getCustomRepository(AppointmentsRepository);
+    
+    //SOLID
+    /*D - DEPENDENCY INVERSION -> Ao invés de instanciar o repositório aqui dentro
+    iremos recebe-lo por parâmetro */
+    
+    private appointmentsRepository: IAppointmentsRepository;
+    
+    constructor(
+        appointmentsRepository: IAppointmentsRepository,
+    ) {
+        this.appointmentsRepository = appointmentsRepository;
+    }
 
+    public async execute({ date, provider_id }: IRequestDTO): Promise<Appointment>{
         const appointmentDate = startOfHour(date)
 
         //Se tudo der certo ele nos retornará os appointments existentes naquela data || retornará Null
-        const findAppointmentInSameDate = await appointmentsRepository.findByDate(
+        const findAppointmentInSameDate = await this.appointmentsRepository.findByDate(
             appointmentDate,
         );
 
@@ -30,12 +40,10 @@ class CreateAppointmentService {
         }
 
         //Criando o appointment (Não está no banco de dados ainda)
-        const appointment = appointmentsRepository.create({
+        const appointment = await this.appointmentsRepository.create({
             provider_id,
             date: appointmentDate,
         });
-
-        await appointmentsRepository.save(appointment);
 
         return appointment;
     }
