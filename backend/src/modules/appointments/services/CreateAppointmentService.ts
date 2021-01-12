@@ -41,7 +41,7 @@ class CreateAppointmentService {
         //Caso retorne Null
         //O Service não tem acesso aos dados da requisição e aos dados da resposta, então enviaremos um erro pra cima
         if(findAppointmentInSameDate){
-            throw new AppError('this appointment is already booked', 400);
+            throw new AppError('this appointment is already booked');
         }
 
         //Criando o appointment (Não está no banco de dados ainda)
