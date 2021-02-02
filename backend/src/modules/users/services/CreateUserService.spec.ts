@@ -1,4 +1,5 @@
 import AppError from '@shared/errors/Error';
+import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider';
 import FakeUserRepository from '../repositories/fakes/FakeUserRepository';
 import CreateUserService from './CreateUserService';
 
@@ -7,11 +8,14 @@ describe('CreateUser', () => {
     it('should be able to create a new user', async () => {
         //Criando o repositório fake
         const fakeUserRepository = new FakeUserRepository();
+        const fakeHashProvider = new FakeHashProvider();
+
 
         /*instanciando o createUsers porém passando o fakeRepository para que tudo 
         seja salvo na memoria Ao invés de salvar no typeorm*/
         const createUserService = new CreateUserService(
-            fakeUserRepository
+            fakeUserRepository,
+            fakeHashProvider
         );
 
         //Os dados não precisam ser reais, estamos apenas testando o service
@@ -29,11 +33,14 @@ describe('CreateUser', () => {
     it('should not be able to create a new user with same email than another', async () => {
         //Criando o repositório fake
         const fakeUserRepository = new FakeUserRepository();
+        const fakeHashProvider = new FakeHashProvider();
+
 
         /*instanciando o createUsers porém passando o fakeRepository para que tudo 
         seja salvo na memoria Ao invés de salvar no typeorm*/
         const createUserService = new CreateUserService(
-            fakeUserRepository
+            fakeUserRepository,
+            fakeHashProvider
         );
 
         //Os dados não precisam ser reais, estamos apenas testando o service

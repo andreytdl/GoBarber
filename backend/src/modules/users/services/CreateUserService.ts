@@ -6,6 +6,7 @@ import User from '../infra/typeorm/entities/User';
 
 import AppError from '@shared/errors/Error';
 import IUserRepository from '../repositories/IUserRepository';
+import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
 interface IRequest {
     name: string,
@@ -23,6 +24,9 @@ class CreateUserService {
     constructor(
         @inject('UsersRepository')
         private userRepository: IUserRepository,
+
+        @inject('HashProvider')
+        private hashProvider: IHashProvider,
     ) { }
 
 
@@ -37,7 +41,7 @@ class CreateUserService {
         }
 
         //Criptografando a senha
-        const hashedPassword = await hash(password, 8);
+        const hashedPassword = await this.hashProvider.generateHash(password);
 
         //Criando o usuário
         const user = await this.userRepository.create({
